@@ -11,6 +11,11 @@ public:
 	CheckTheCheck();
 	void exeCheckTheCheck(string, string);
 	void readInput(string);	
+	bool advRowLftToRght(int, int, char);
+	bool advRowRghtToLft(int, int, char);
+	bool advColDownToTop(int, int, char);
+	bool advColTopToDown(int, int, char);
+	bool RookCheck();
 	bool whitePawnCheck();
 	void printBoard(string);
 };
@@ -28,7 +33,7 @@ void CheckTheCheck::exeCheckTheCheck(string inputFile, string outputFile) {
 
 	readInput(inputFile);
 	printBoard(outputFile);
-	if(whitePawnCheck()) {
+	if(RookCheck()) {
 		cout << "In Check\n";
 	} else
 		cout << "King is safe\n"; 
@@ -46,6 +51,57 @@ void CheckTheCheck::readInput(string inputFile) {
 		}
 	}
 	readFile.close();
+}
+
+bool CheckTheCheck::advRowLftToRght(int rowPos, int colPos, char chessPiece) {
+
+	while(colPos + 1 < 7 && chessBoard[rowPos][colPos + 1] == '.')
+		colPos++;
+	return chessBoard[rowPos][colPos + 1] == chessPiece;
+}
+
+bool CheckTheCheck::advRowRghtToLft(int rowPos, int colPos, char chessPiece) {
+
+	while(colPos - 1 > 0 && chessBoard[rowPos][colPos - 1] == '.')
+		colPos--;
+	return chessBoard[rowPos][colPos - 1] == chessPiece;
+}
+
+bool CheckTheCheck::advColDownToTop(int rowPos, int colPos, char chessPiece) {
+
+	while(rowPos - 1 > 0 && chessBoard[rowPos - 1][colPos] == '.')
+		rowPos--;
+	return chessBoard[rowPos - 1][colPos] == chessPiece;
+}
+
+bool CheckTheCheck::advColTopToDown(int rowPos, int colPos, char chessPiece) {
+
+	while(rowPos + 1 < 8 && chessBoard[rowPos + 1][colPos] == '.')
+		rowPos++;
+	return chessBoard[rowPos + 1][colPos] == chessPiece;
+}
+
+bool CheckTheCheck::RookCheck() {
+
+	for(int row = 0; row < 8; ++row) {
+		for(int col = 0; col < 8; ++col) {
+			if(chessBoard[row][col] == 'R') {
+				if(advRowLftToRght(row, col, 'k') ||
+				   advRowRghtToLft(row, col, 'k') ||
+				   advColTopToDown(row, col, 'k') ||
+				   advColDownToTop(row, col, 'k')   )
+					return true;
+			}
+			if(chessBoard[row][col] == 'r') {
+				if(advRowLftToRght(row, col, 'K') ||
+				   advRowRghtToLft(row, col, 'K') ||
+				   advColTopToDown(row, col, 'K') ||
+				   advColDownToTop(row, col, 'K')   )
+					return true;
+			}
+		}
+	}
+	return false;
 }
 
 bool CheckTheCheck::whitePawnCheck() {
