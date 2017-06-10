@@ -11,6 +11,7 @@ public:
 	CheckTheCheck();
 	void exeCheckTheCheck(string, string);
 	void readInput(string);	
+	bool whitePawnCheck();
 	void printBoard(string);
 };
 
@@ -27,6 +28,10 @@ void CheckTheCheck::exeCheckTheCheck(string inputFile, string outputFile) {
 
 	readInput(inputFile);
 	printBoard(outputFile);
+	if(whitePawnCheck()) {
+		cout << "In Check\n";
+	} else
+		cout << "King is safe\n"; 
 }
 
 void CheckTheCheck::readInput(string inputFile) {
@@ -41,6 +46,32 @@ void CheckTheCheck::readInput(string inputFile) {
 		}
 	}
 	readFile.close();
+}
+
+bool CheckTheCheck::whitePawnCheck() {
+
+	int takeRwPos = 0;
+	int takeColPosLeft = 0;
+	int takeColPosRight = 0;
+	for(int row = 7; row > 0; --row) {
+		for(int col = 7; col >= 0; --col) {
+			if(chessBoard[row][col] == 'P') {
+				takeRwPos = row - 1;
+				takeColPosLeft = col + 1;
+				takeColPosRight = col - 1;
+				cout << "row: " << row << " col: " << col << 
+				" takeColPosLeft: " << takeColPosLeft << " takeColPosRight: "
+				<<takeColPosRight << endl;
+				if((takeColPosLeft  >= 0 && takeColPosLeft  <= 7    &&
+				    chessBoard[takeRwPos][takeColPosLeft]   == 'k') ||
+			   	   (takeColPosRight >= 0 && takeColPosRight <= 7    &&
+			   		chessBoard[takeRwPos][takeColPosRight]  == 'k'    )) {
+						return true;
+				}
+		    }//if value == "P"
+		}//for
+	}//for
+	return false;
 }
 
 void CheckTheCheck::printBoard(string outputFile) {
