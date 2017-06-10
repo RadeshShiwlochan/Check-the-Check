@@ -15,7 +15,12 @@ public:
 	bool advRowRghtToLft(int, int, char);
 	bool advColDownToTop(int, int, char);
 	bool advColTopToDown(int, int, char);
+	bool advDiagDownTopLftRght(int, int, char);
+	bool advDiagTopDownLftRght(int, int, char);
+	bool advDiagDownTopRghtLft(int, int, char);
+	bool advDiagTopDownRghtLft(int, int, char);
 	bool RookCheck();
+	bool BishopCheck();
 	bool whitePawnCheck();
 	void printBoard(string);
 };
@@ -33,7 +38,7 @@ void CheckTheCheck::exeCheckTheCheck(string inputFile, string outputFile) {
 
 	readInput(inputFile);
 	printBoard(outputFile);
-	if(RookCheck()) {
+	if(BishopCheck()) {
 		cout << "In Check\n";
 	} else
 		cout << "King is safe\n"; 
@@ -53,32 +58,79 @@ void CheckTheCheck::readInput(string inputFile) {
 	readFile.close();
 }
 
-bool CheckTheCheck::advRowLftToRght(int rowPos, int colPos, char chessPiece) {
+bool CheckTheCheck::advRowLftToRght(int rowPos, int colPos, 
+														char chessPiece) {
 
 	while(colPos + 1 < 7 && chessBoard[rowPos][colPos + 1] == '.')
 		colPos++;
 	return chessBoard[rowPos][colPos + 1] == chessPiece;
 }
 
-bool CheckTheCheck::advRowRghtToLft(int rowPos, int colPos, char chessPiece) {
+bool CheckTheCheck::advRowRghtToLft(int rowPos, int colPos, 
+														char chessPiece) {
 
 	while(colPos - 1 > 0 && chessBoard[rowPos][colPos - 1] == '.')
 		colPos--;
 	return chessBoard[rowPos][colPos - 1] == chessPiece;
 }
 
-bool CheckTheCheck::advColDownToTop(int rowPos, int colPos, char chessPiece) {
+bool CheckTheCheck::advColDownToTop(int rowPos, int colPos, 
+														char chessPiece) {
 
 	while(rowPos - 1 > 0 && chessBoard[rowPos - 1][colPos] == '.')
 		rowPos--;
 	return chessBoard[rowPos - 1][colPos] == chessPiece;
 }
 
-bool CheckTheCheck::advColTopToDown(int rowPos, int colPos, char chessPiece) {
+bool CheckTheCheck::advColTopToDown(int rowPos, int colPos, 
+														char chessPiece) {
 
 	while(rowPos + 1 < 8 && chessBoard[rowPos + 1][colPos] == '.')
 		rowPos++;
 	return chessBoard[rowPos + 1][colPos] == chessPiece;
+}
+
+bool CheckTheCheck::advDiagDownTopLftRght(int rowPos, int colPos, 
+														char chessPiece) {
+
+	while(rowPos - 1 > 0 && colPos + 1 < 8 && 
+		             chessBoard[rowPos - 1][colPos + 1] == '.' ) {
+		rowPos--;
+		colPos++;
+	}
+	return chessBoard[rowPos - 1][colPos + 1] == chessPiece;
+}
+
+bool CheckTheCheck::advDiagTopDownLftRght(int rowPos, int colPos, 
+														char chessPiece) {
+
+	while(rowPos + 1 < 8 && colPos + 1 < 8 && 
+					chessBoard[rowPos + 1][colPos + 1] == '.') {
+		rowPos++;
+		colPos++;
+	}
+	return chessBoard[rowPos + 1][colPos + 1] == chessPiece;
+}
+
+bool CheckTheCheck::advDiagDownTopRghtLft(int rowPos, int colPos, 
+														char chessPiece) {
+
+	while(rowPos - 1 > 0 && colPos - 1 > 0 &&
+						chessBoard[rowPos - 1][colPos - 1] == '.') {
+		rowPos--;
+		colPos--;
+	}
+	return chessBoard[rowPos - 1][colPos - 1] == chessPiece;
+}
+
+bool CheckTheCheck::advDiagTopDownRghtLft(int rowPos, int colPos, 
+														char chessPiece) {
+
+	while(rowPos + 1 < 8 && colPos - 1 > 0 && chessBoard[rowPos + 1][colPos - 1]) {
+		rowPos++;
+		colPos--;
+	}
+	return chessBoard[rowPos + 1][colPos - 1] == chessPiece;
 }
 
 bool CheckTheCheck::RookCheck() {
@@ -102,6 +154,31 @@ bool CheckTheCheck::RookCheck() {
 		}
 	}
 	return false;
+}
+
+bool CheckTheCheck::BishopCheck() {
+
+
+	for(int row = 0; row < 8; ++row) {
+		for(int col = 0; col < 8; ++col) {
+			if(chessBoard[row][col] == 'B') {
+				if(advDiagTopDownLftRght(row, col, 'k') ||
+				   advDiagDownTopLftRght(row, col, 'k') ||
+				   advDiagTopDownRghtLft(row, col, 'k') ||
+				   advDiagDownTopRghtLft(row, col, 'k')   )
+					return true;
+			}
+			if(chessBoard[row][col] == 'b') {
+				if(advDiagTopDownLftRght(row, col, 'K') ||
+				   advDiagDownTopLftRght(row, col, 'K') ||
+				   advDiagTopDownRghtLft(row, col, 'K') ||
+				   advDiagDownTopRghtLft(row, col, 'K')   )
+					return true;
+			}
+		}
+	}
+	return false;
+
 }
 
 bool CheckTheCheck::whitePawnCheck() {
