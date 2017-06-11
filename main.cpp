@@ -9,8 +9,7 @@ private:
 
 public:
 	CheckTheCheck();
-	void exeCheckTheCheck(string, string);
-	void readInput(string);	
+	void exeCheckTheCheck(string, string);	
 	bool advRowLftToRght(int, int, char);
 	bool advRowRghtToLft(int, int, char);
 	bool advColDownToTop(int, int, char);
@@ -22,14 +21,14 @@ public:
 	bool advOnePosAllDir(int, int, char);
 	bool longLShapeDir(int, int, char);
 	bool shortLShapeDir(int, int, char);
-	bool rookCheck();
-	bool bishopCheck();
-	bool knightCheck();
-	bool kingCheck();
-	bool queenCheck();
-	bool whitePawnCheck();
-	bool blackPawnCheck();
-	void printBoard(string);
+	bool rookCheck(ofstream&);
+	bool bishopCheck(ofstream&);
+	bool knightCheck(ofstream&);
+	bool kingCheck(ofstream&);
+	bool queenCheck(ofstream&);
+	bool whitePawnCheck(ofstream&);
+	bool blackPawnCheck(ofstream&);
+	void printCount(ofstream&, int);
 };
 
 CheckTheCheck::CheckTheCheck() {
@@ -43,26 +42,37 @@ CheckTheCheck::CheckTheCheck() {
 
 void CheckTheCheck::exeCheckTheCheck(string inputFile, string outputFile) {
 
-	readInput(inputFile);
-	printBoard(outputFile);
-	if(knightCheck()) 
-		cout << "In Check\n";
-	else
-		cout << "King is safe\n"; 
-}
-
-void CheckTheCheck::readInput(string inputFile) {
-
 	ifstream readFile;
 	readFile.open(inputFile);
+	ofstream printToFile;
+	printToFile.open(outputFile);
 	char boardConfig = 'x';
-	for(int row = 0; row < 8; ++row) {
-		for(int col = 0; col < 8; ++col) {
-			readFile >> boardConfig;
-			chessBoard[row][col] = boardConfig;
+	int count = 0;
+	while(readFile.good()) {
+		count++;
+		for(int row = 0; row < 8; ++row) {
+			for(int col = 0; col < 8; ++col) {
+				readFile >> boardConfig;
+				chessBoard[row][col] = boardConfig;
+			}
 		}
+		printCount(printToFile, count); 
+
+		if(rookCheck(printToFile)         ||
+		   bishopCheck(printToFile)       ||
+		   queenCheck(printToFile)        ||
+		   knightCheck(printToFile)       ||
+		   kingCheck(printToFile)         ||
+		   blackPawnCheck(printToFile)    ||
+		   whitePawnCheck(printToFile)      )
+			cout << "";
+
+		else  
+			printToFile << "no king is in check.\n";
+		
 	}
 	readFile.close();
+	printToFile.close();	 
 }
 
 bool CheckTheCheck::advRowLftToRght(int rowPos, int colPos, 
@@ -206,7 +216,7 @@ bool CheckTheCheck::shortLShapeDir(int rowPos, int colPos,
 
 } 
 
-bool CheckTheCheck::rookCheck() {
+bool CheckTheCheck::rookCheck(ofstream& printToFile) {
 
 	for(int row = 0; row < 8; ++row) {
 		for(int col = 0; col < 8; ++col) {
@@ -214,22 +224,26 @@ bool CheckTheCheck::rookCheck() {
 				if(advRowLftToRght(row, col, 'k') ||
 				   advRowRghtToLft(row, col, 'k') ||
 				   advColTopToDown(row, col, 'k') ||
-				   advColDownToTop(row, col, 'k')   )
+				   advColDownToTop(row, col, 'k')   ) {
+					printToFile << "black king is in check.\n";
 					return true;
+			    }
 			}
 			if(chessBoard[row][col] == 'r') {
 				if(advRowLftToRght(row, col, 'K') ||
 				   advRowRghtToLft(row, col, 'K') ||
 				   advColTopToDown(row, col, 'K') ||
-				   advColDownToTop(row, col, 'K')   )
+				   advColDownToTop(row, col, 'K')   ) {
+				   	printToFile << "white king is in check.\n";
 					return true;
+			    }
 			}
 		}
 	}
 	return false;
 }
 
-bool CheckTheCheck::bishopCheck() {
+bool CheckTheCheck::bishopCheck(ofstream& printToFile) {
 
 	for(int row = 0; row < 8; ++row) {
 		for(int col = 0; col < 8; ++col) {
@@ -237,52 +251,65 @@ bool CheckTheCheck::bishopCheck() {
 				if(advDiagTopDownLftRght(row, col, 'k') ||
 				   advDiagDownTopLftRght(row, col, 'k') ||
 				   advDiagTopDownRghtLft(row, col, 'k') ||
-				   advDiagDownTopRghtLft(row, col, 'k')   )
+				   advDiagDownTopRghtLft(row, col, 'k')   ) {
+					printToFile << "black king is in check.\n";
 					return true;
+			    }
 			}
 			if(chessBoard[row][col] == 'b') {
 				if(advDiagTopDownLftRght(row, col, 'K') ||
 				   advDiagDownTopLftRght(row, col, 'K') ||
 				   advDiagTopDownRghtLft(row, col, 'K') ||
-				   advDiagDownTopRghtLft(row, col, 'K')   )
+				   advDiagDownTopRghtLft(row, col, 'K')   ) {
+				   	printToFile << "white king is in check.\n";
 					return true;
+			    }
 			}
 		}
 	}
 	return false;
 }
 
-bool CheckTheCheck::knightCheck() {
+bool CheckTheCheck::knightCheck(ofstream& printToFile) {
 
 	for(int row = 0; row < 8; ++row) {
 		for(int col = 0; col < 8; ++col) {
 			if(chessBoard[row][col] == 'N' && longLShapeDir(row, col, 'k') &&
-				shortLShapeDir(row, col, 'k'))
+				shortLShapeDir(row, col, 'k')) {
+				printToFile << "black king is in check.\n";
 				return true;
+			}
+				
 			if(chessBoard[row][col] == 'n' && longLShapeDir(row, col, 'K') &&
-				shortLShapeDir(row, col, 'K'))
-				return true;	 
+				shortLShapeDir(row, col, 'K')) {
+				printToFile << "white king is in check.\n";
+				return true;
+			}		 
 		}
 	}
 	return false;
 }
 
-bool CheckTheCheck::kingCheck() {
+bool CheckTheCheck::kingCheck(ofstream& printToFile) {
 
 	for(int row = 0; row < 8; ++row) {
 		for(int col = 0; col < 8; ++col) {
 			if(chessBoard[row][col] == 'K' && 
-				advOnePosAllDir(row, col, 'k'))
+				advOnePosAllDir(row, col, 'k')) {
+				printToFile << "black king is in check.\n";
 				return true;
+		    }
 			if(chessBoard[row][col] == 'k' && 
-				advOnePosAllDir(row, col, 'K'))
+				advOnePosAllDir(row, col, 'K')) {
+				printToFile << "white king is in check.\n";
 				return true;
+			}
 		}
 	}
 	return false;
 }
 
-bool CheckTheCheck::queenCheck() {
+bool CheckTheCheck::queenCheck(ofstream& printToFile) {
 
 	for(int row = 0; row < 8; ++row) {
 		for(int col = 0; col < 8; ++col) {
@@ -294,8 +321,12 @@ bool CheckTheCheck::queenCheck() {
 					advDiagDownTopLftRght(row, col, 'k') ||
 					advDiagTopDownLftRght(row, col, 'k') ||
 					advDiagDownTopRghtLft(row, col, 'k') ||
-					advDiagTopDownRghtLft(row, col, 'k')) 
-					return true;
+					advDiagTopDownRghtLft(row, col, 'k')   )
+					{
+						printToFile << "black king is in check.\n";
+						return true;
+					} 
+					
             }
 			if(chessBoard[row][col] == 'q')                 {
 				if(advColDownToTop(row,  col, 'K'      ) ||
@@ -305,15 +336,17 @@ bool CheckTheCheck::queenCheck() {
 					advDiagDownTopLftRght(row, col, 'K') ||
 					advDiagTopDownLftRght(row, col, 'K') ||
 					advDiagDownTopRghtLft(row, col, 'K') ||
-					advDiagTopDownRghtLft(row, col, 'K')    )
+					advDiagTopDownRghtLft(row, col, 'K')    ) {
+					printToFile << "white king is in check.\n";
 					return true;
+			    }
 		    }
 		}
 	}
 	return false;
 }
 
-bool CheckTheCheck::whitePawnCheck() {
+bool CheckTheCheck::whitePawnCheck(ofstream& printToFile) {
 
 	int takeRwPos = 0;
 	int takeColPosLeft = 0;
@@ -328,6 +361,7 @@ bool CheckTheCheck::whitePawnCheck() {
 				    chessBoard[takeRwPos][takeColPosLeft]   == 'k') ||
 			   	   (takeColPosRight >= 0 && takeColPosRight <= 7    &&
 			   		chessBoard[takeRwPos][takeColPosRight]  == 'k')    ) {
+						printToFile << "black king is in check.\n";
 						return true;
 				}
 		    }//if value == "P"
@@ -336,7 +370,7 @@ bool CheckTheCheck::whitePawnCheck() {
 	return false;
 }
 
-bool CheckTheCheck::blackPawnCheck() {
+bool CheckTheCheck::blackPawnCheck(ofstream& printToFile) {
 
 	int takeRwPos = 0;
 	int takeColPosLeft = 0;
@@ -351,6 +385,7 @@ bool CheckTheCheck::blackPawnCheck() {
 				    chessBoard[takeRwPos][takeColPosLeft]   == 'K') ||
 			   	   (takeColPosRight >= 0 && takeColPosRight <= 7    &&
 			   		chessBoard[takeRwPos][takeColPosRight]  == 'K')    ) {
+						printToFile << "white king is in check.\n";
 						return true;
 				}
 		    }//if value == "P"
@@ -359,17 +394,17 @@ bool CheckTheCheck::blackPawnCheck() {
 	return false;
 }
 
-void CheckTheCheck::printBoard(string outputFile) {
-
-	ofstream printToFile;
-	printToFile.open(outputFile);
-	for(int row = 0; row < 8; ++row) {
-		for(int col = 0; col < 8; ++col) {
-			printToFile << chessBoard[row][col] << "  ";
-		}
-		printToFile << endl;
-	}
-	printToFile.close();
+void CheckTheCheck::printCount(ofstream& printToFile, int count) {
+    
+    printToFile << "Game #" << count <<": ";
+	// for(int row = 0; row < 8; ++row) {
+	// 	for(int col = 0; col < 8; ++col) {
+	// 		printToFile << chessBoard[row][col] << "  ";
+	// 	}
+	// 	printToFile << endl;
+	// }
+	// printToFile << endl;
+	//printToFile.close();
 }
 
 int main(int argc, char* argv[]) {

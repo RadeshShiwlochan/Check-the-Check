@@ -1,8 +1,4 @@
-r  n  b  q  k  .  n  r  
-p  p  p  .  .  p  p  p  
-.  .  .  .  p  .  .  .  
-.  .  .  p  .  .  .  .  
-b  .  P  P  .  .  .  .  
-.  .  .  .  .  n  .  .  
-P  P  .  p  P  P  P  P  
-R  N  B  Q  K  B  .  R  
+Game #1: black king is in check.
+Game #2: no king is in check.
+Game #3: white king is in check.
+Game #4: no king is in check.
