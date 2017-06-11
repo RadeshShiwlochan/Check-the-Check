@@ -3,6 +3,6 @@ p  p  p  .  .  p  p  p
 .  .  .  .  p  .  .  .  
 .  .  .  p  .  .  .  .  
 b  .  P  P  .  .  .  .  
-.  .  .  .  .  N  .  .  
+.  .  .  .  .  n  .  .  
 P  P  .  p  P  P  P  P  
 R  N  B  Q  K  B  .  R  

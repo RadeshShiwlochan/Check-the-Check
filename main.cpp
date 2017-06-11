@@ -20,10 +20,13 @@ public:
 	bool advDiagDownTopRghtLft(int, int, char);
 	bool advDiagTopDownRghtLft(int, int, char);
 	bool advOnePosAllDir(int, int, char);
-	bool RookCheck();
-	bool BishopCheck();
-	bool KingCheck();
-	bool QueenCheck();
+	bool longLShapeDir(int, int, char);
+	bool shortLShapeDir(int, int, char);
+	bool rookCheck();
+	bool bishopCheck();
+	bool knightCheck();
+	bool kingCheck();
+	bool queenCheck();
 	bool whitePawnCheck();
 	bool blackPawnCheck();
 	void printBoard(string);
@@ -42,7 +45,7 @@ void CheckTheCheck::exeCheckTheCheck(string inputFile, string outputFile) {
 
 	readInput(inputFile);
 	printBoard(outputFile);
-	if(blackPawnCheck()) 
+	if(knightCheck()) 
 		cout << "In Check\n";
 	else
 		cout << "King is safe\n"; 
@@ -139,8 +142,7 @@ bool CheckTheCheck::advDiagTopDownRghtLft(int rowPos, int colPos,
 
 bool CheckTheCheck::advOnePosAllDir(int rowPos, int colPos,
 													char chessPiece) {
-	int rowVal = rowPos;
-	int colVal = colPos;
+
 	if((rowPos - 1 >= 0 && chessBoard[rowPos - 1][colPos] == chessPiece) ||
 	   (colPos - 1 >= 0 && chessBoard[rowPos][colPos - 1] == chessPiece) ||
 	   (colPos + 1 <= 7 && chessBoard[rowPos][colPos + 1] == chessPiece) ||
@@ -157,7 +159,54 @@ bool CheckTheCheck::advOnePosAllDir(int rowPos, int colPos,
 	return false;
 }
 
-bool CheckTheCheck::RookCheck() {
+bool CheckTheCheck::longLShapeDir(int rowPos, int colPos, 
+												  char chessPiece) {
+	
+	if((colPos + 2 <= 7 && colPos + 2 >= 0 && rowPos + 1 <= 7 && 
+	    rowPos + 1 >= 0 && chessBoard[rowPos + 1][colPos + 2] == chessPiece)  || 
+	   (colPos + 2 <= 7 && colPos + 2 >= 0 && rowPos - 1 <= 7 && 
+	    rowPos - 1 >= 0 && chessBoard[rowPos - 1][colPos + 2] == chessPiece)  ||
+	   (rowPos + 2 <= 7 && rowPos + 2 >= 0 && colPos - 1 >= 0 && 
+	   	colPos - 1 <= 7 && chessBoard[rowPos + 2][colPos - 1] == chessPiece)  ||
+	   (rowPos + 2 <= 7 && rowPos + 2 >= 0 && colPos + 1 >= 0 && 
+	   	colPos + 1 <= 7 && chessBoard[rowPos + 2][colPos + 1] == chessPiece)  ||
+	   (rowPos - 2 <= 7 && rowPos - 2 >= 0 && colPos - 1 >= 0 && 
+	   	colPos - 1 <= 0 && chessBoard[rowPos - 2][colPos - 1] == chessPiece)  ||
+	   (rowPos - 2 <= 7 && rowPos - 2 >= 0 && colPos + 1 >= 0 && 
+	   	colPos + 1 <= 0 && chessBoard[rowPos - 2][colPos + 1] == chessPiece)  ||
+	   (colPos - 2 <= 7 && colPos - 2 >= 0 && rowPos + 1 <= 7 && 
+	    rowPos + 1 >= 0 && chessBoard[rowPos + 1][colPos - 2] == chessPiece ) ||
+	   (colPos - 2 <= 7 && colPos - 2 >= 0 && rowPos - 1 <= 7 && 
+	    rowPos - 1 >= 0 && chessBoard[rowPos - 1][colPos - 2] == chessPiece)    ) 
+		return true;
+	return false;
+}
+
+bool CheckTheCheck::shortLShapeDir(int rowPos, int colPos,
+												   char chessPiece) {
+
+	if((colPos + 1 <= 7 && colPos + 1 >= 0 && rowPos + 2 <= 7 &&
+		rowPos + 2 >= 0 && chessBoard[rowPos + 2][colPos + 1] == chessPiece)  || 
+	   (colPos - 1 <= 7 && colPos - 1 >= 0 && rowPos + 2 <= 7 &&
+		rowPos + 2 >= 0 && chessBoard[rowPos + 2][colPos - 1] == chessPiece)  ||
+	   (colPos + 1 <= 7 && colPos + 1 >= 0 && rowPos - 2 <= 7 &&
+		rowPos - 2 >= 0 && chessBoard[rowPos - 2][colPos + 1] == chessPiece)  || 
+	   (colPos - 1 <= 7 && colPos - 1 >= 0 && rowPos - 2 <= 7 &&
+		rowPos - 2 >= 0 && chessBoard[rowPos - 2][colPos - 1] == chessPiece)  ||
+	   (colPos + 2 <= 7 && colPos + 2 >= 0 && rowPos - 1 >= 7 &&
+	   	rowPos - 1 <= 0 && chessBoard[rowPos - 1][colPos + 1] == chessPiece)  ||
+	   (colPos + 2 <= 7 && colPos + 2 >= 0 && rowPos + 1 >= 7 &&
+	   	rowPos + 1 <= 0 && chessBoard[rowPos + 1][colPos + 1] == chessPiece)  ||
+	   (colPos - 2 <= 7 && colPos - 2 >= 0 && rowPos - 1 <= 7 && 
+	   	rowPos - 1 >= 0 && chessBoard[rowPos - 1][colPos - 2] == chessPiece)  ||
+	   (colPos + 2 <= 7 && colPos + 2 >= 0 && rowPos - 1 <= 7 && 
+	   	rowPos - 1 >= 0 && chessBoard[rowPos - 1][colPos + 2] == chessPiece)    )
+	   	return true;
+	return false;   	
+
+} 
+
+bool CheckTheCheck::rookCheck() {
 
 	for(int row = 0; row < 8; ++row) {
 		for(int col = 0; col < 8; ++col) {
@@ -180,7 +229,7 @@ bool CheckTheCheck::RookCheck() {
 	return false;
 }
 
-bool CheckTheCheck::BishopCheck() {
+bool CheckTheCheck::bishopCheck() {
 
 	for(int row = 0; row < 8; ++row) {
 		for(int col = 0; col < 8; ++col) {
@@ -203,7 +252,22 @@ bool CheckTheCheck::BishopCheck() {
 	return false;
 }
 
-bool CheckTheCheck::KingCheck() {
+bool CheckTheCheck::knightCheck() {
+
+	for(int row = 0; row < 8; ++row) {
+		for(int col = 0; col < 8; ++col) {
+			if(chessBoard[row][col] == 'N' && longLShapeDir(row, col, 'k') &&
+				shortLShapeDir(row, col, 'k'))
+				return true;
+			if(chessBoard[row][col] == 'n' && longLShapeDir(row, col, 'K') &&
+				shortLShapeDir(row, col, 'K'))
+				return true;	 
+		}
+	}
+	return false;
+}
+
+bool CheckTheCheck::kingCheck() {
 
 	for(int row = 0; row < 8; ++row) {
 		for(int col = 0; col < 8; ++col) {
@@ -218,26 +282,26 @@ bool CheckTheCheck::KingCheck() {
 	return false;
 }
 
-bool CheckTheCheck::QueenCheck() {
+bool CheckTheCheck::queenCheck() {
 
 	for(int row = 0; row < 8; ++row) {
 		for(int col = 0; col < 8; ++col) {
-			if(chessBoard[row][col] == 'Q'  ) {     
-				if(advColDownToTop(row, col,'k')          ||
-					advColTopToDown(row, col, 'k')       ||
-					advRowLftToRght(row, col, 'k')       ||
-					advRowRghtToLft(row, col, 'k')       ||
+			if(chessBoard[row][col] == 'Q'  )                {     
+				if(advColDownToTop(row,  col,'k'      )  ||
+					advColTopToDown(row, col,'k'      )  ||
+					advRowLftToRght(row, col,'k'      )  ||
+					advRowRghtToLft(row, col,'k'      )  ||
 					advDiagDownTopLftRght(row, col, 'k') ||
 					advDiagTopDownLftRght(row, col, 'k') ||
 					advDiagDownTopRghtLft(row, col, 'k') ||
 					advDiagTopDownRghtLft(row, col, 'k')) 
 					return true;
             }
-			if(chessBoard[row][col] == 'q') {
-				if(advColDownToTop(row, col,'K' )    ||
-				   advColTopToDown(row, col, 'K')       ||
-					advRowLftToRght(row, col, 'K')       ||
-					advRowRghtToLft(row, col, 'K')       ||
+			if(chessBoard[row][col] == 'q')                 {
+				if(advColDownToTop(row,  col, 'K'      ) ||
+				   advColTopToDown(row,  col, 'K'      ) ||
+					advRowLftToRght(row, col, 'K'      ) ||
+					advRowRghtToLft(row, col, 'K'      ) ||
 					advDiagDownTopLftRght(row, col, 'K') ||
 					advDiagTopDownLftRght(row, col, 'K') ||
 					advDiagDownTopRghtLft(row, col, 'K') ||
