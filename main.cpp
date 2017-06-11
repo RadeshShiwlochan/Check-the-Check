@@ -23,6 +23,7 @@ public:
 	bool RookCheck();
 	bool BishopCheck();
 	bool KingCheck();
+	bool QueenCheck();
 	bool whitePawnCheck();
 	void printBoard(string);
 };
@@ -40,9 +41,9 @@ void CheckTheCheck::exeCheckTheCheck(string inputFile, string outputFile) {
 
 	readInput(inputFile);
 	printBoard(outputFile);
-	if(KingCheck()) {
+	if(QueenCheck()) 
 		cout << "In Check\n";
-	} else
+	else
 		cout << "King is safe\n"; 
 }
 
@@ -216,6 +217,37 @@ bool CheckTheCheck::KingCheck() {
 	return false;
 }
 
+bool CheckTheCheck::QueenCheck() {
+
+	for(int row = 0; row < 8; ++row) {
+		for(int col = 0; col < 8; ++col) {
+			if(chessBoard[row][col] == 'Q'  ) {     
+				if(advColDownToTop(row, col,'k')          ||
+					advColTopToDown(row, col, 'k')       ||
+					advRowLftToRght(row, col, 'k')       ||
+					advRowRghtToLft(row, col, 'k')       ||
+					advDiagDownTopLftRght(row, col, 'k') ||
+					advDiagTopDownLftRght(row, col, 'k') ||
+					advDiagDownTopRghtLft(row, col, 'k') ||
+					advDiagTopDownRghtLft(row, col, 'k')) 
+					return true;
+            }
+			if(chessBoard[row][col] == 'q') {
+				if(advColDownToTop(row, col,'K' )    ||
+				   advColTopToDown(row, col, 'K')       ||
+					advRowLftToRght(row, col, 'K')       ||
+					advRowRghtToLft(row, col, 'K')       ||
+					advDiagDownTopLftRght(row, col, 'K') ||
+					advDiagTopDownLftRght(row, col, 'K') ||
+					advDiagDownTopRghtLft(row, col, 'K') ||
+					advDiagTopDownRghtLft(row, col, 'K')    )
+					return true;
+		    }
+		}
+	}
+	return false;
+}
+
 bool CheckTheCheck::whitePawnCheck() {
 
 	int takeRwPos = 0;
@@ -227,13 +259,10 @@ bool CheckTheCheck::whitePawnCheck() {
 				takeRwPos = row - 1;
 				takeColPosLeft = col + 1;
 				takeColPosRight = col - 1;
-				cout << "row: " << row << " col: " << col << 
-				" takeColPosLeft: " << takeColPosLeft << " takeColPosRight: "
-				<<takeColPosRight << endl;
 				if((takeColPosLeft  >= 0 && takeColPosLeft  <= 7    &&
 				    chessBoard[takeRwPos][takeColPosLeft]   == 'k') ||
 			   	   (takeColPosRight >= 0 && takeColPosRight <= 7    &&
-			   		chessBoard[takeRwPos][takeColPosRight]  == 'k'    )) {
+			   		chessBoard[takeRwPos][takeColPosRight]  == 'k')    ) {
 						return true;
 				}
 		    }//if value == "P"

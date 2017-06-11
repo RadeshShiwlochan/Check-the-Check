@@ -5,4 +5,4 @@ ppp..ppp
 b.PP....
 .....N..
 PP..PPPP
-RNBQkB.R
+RNBQKB.R

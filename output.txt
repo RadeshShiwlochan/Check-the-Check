@@ -1,8 +1,8 @@
 r  n  b  q  k  .  n  r  
-p  p  p  .  .  p  p  p  
+p  p  p  .  K  p  p  p  
 .  .  .  .  p  .  .  .  
 .  .  .  p  .  .  .  .  
 b  .  P  P  .  .  .  .  
 .  .  .  .  .  N  .  .  
-P  P  .  K  P  P  P  P  
-R  N  B  Q  k  B  .  R  
+P  P  .  .  P  P  P  P  
+R  N  B  Q  K  B  .  R  
