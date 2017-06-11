@@ -9,7 +9,8 @@ private:
 
 public:
 	CheckTheCheck();
-	void exeCheckTheCheck(string, string);	
+	void exeCheckTheCheck(string, string);
+	bool checkEndOfInput();	
 	bool advRowLftToRght(int, int, char);
 	bool advRowRghtToLft(int, int, char);
 	bool advColDownToTop(int, int, char);
@@ -56,8 +57,9 @@ void CheckTheCheck::exeCheckTheCheck(string inputFile, string outputFile) {
 				chessBoard[row][col] = boardConfig;
 			}
 		}
+		if(checkEndOfInput())
+			break;
 		printCount(printToFile, count); 
-
 		if(rookCheck(printToFile)         ||
 		   bishopCheck(printToFile)       ||
 		   queenCheck(printToFile)        ||
@@ -73,6 +75,18 @@ void CheckTheCheck::exeCheckTheCheck(string inputFile, string outputFile) {
 	}
 	readFile.close();
 	printToFile.close();	 
+}
+
+bool CheckTheCheck::checkEndOfInput() {
+
+	bool flag = true;
+	for(int row = 0; row < 8; ++row) {
+		for(int col = 0; col < 8; ++col) {
+			if(chessBoard[row][col] != '.')
+				flag = false;
+		}
+	}
+	return flag;
 }
 
 bool CheckTheCheck::advRowLftToRght(int rowPos, int colPos, 
@@ -397,14 +411,6 @@ bool CheckTheCheck::blackPawnCheck(ofstream& printToFile) {
 void CheckTheCheck::printCount(ofstream& printToFile, int count) {
     
     printToFile << "Game #" << count <<": ";
-	// for(int row = 0; row < 8; ++row) {
-	// 	for(int col = 0; col < 8; ++col) {
-	// 		printToFile << chessBoard[row][col] << "  ";
-	// 	}
-	// 	printToFile << endl;
-	// }
-	// printToFile << endl;
-	//printToFile.close();
 }
 
 int main(int argc, char* argv[]) {
