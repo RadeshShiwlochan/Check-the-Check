@@ -25,6 +25,7 @@ public:
 	bool KingCheck();
 	bool QueenCheck();
 	bool whitePawnCheck();
+	bool blackPawnCheck();
 	void printBoard(string);
 };
 
@@ -41,7 +42,7 @@ void CheckTheCheck::exeCheckTheCheck(string inputFile, string outputFile) {
 
 	readInput(inputFile);
 	printBoard(outputFile);
-	if(QueenCheck()) 
+	if(blackPawnCheck()) 
 		cout << "In Check\n";
 	else
 		cout << "King is safe\n"; 
@@ -263,6 +264,29 @@ bool CheckTheCheck::whitePawnCheck() {
 				    chessBoard[takeRwPos][takeColPosLeft]   == 'k') ||
 			   	   (takeColPosRight >= 0 && takeColPosRight <= 7    &&
 			   		chessBoard[takeRwPos][takeColPosRight]  == 'k')    ) {
+						return true;
+				}
+		    }//if value == "P"
+		}//for
+	}//for
+	return false;
+}
+
+bool CheckTheCheck::blackPawnCheck() {
+
+	int takeRwPos = 0;
+	int takeColPosLeft = 0;
+	int takeColPosRight = 0;
+	for(int row = 0; row < 7; ++row) {
+		for(int col = 0; col < 8; ++col) {
+			if(chessBoard[row][col] == 'p') {
+				takeRwPos = row + 1;
+				takeColPosLeft = col + 1;
+				takeColPosRight = col - 1;
+				if((takeColPosLeft  >= 0 && takeColPosLeft  <= 7    &&
+				    chessBoard[takeRwPos][takeColPosLeft]   == 'K') ||
+			   	   (takeColPosRight >= 0 && takeColPosRight <= 7    &&
+			   		chessBoard[takeRwPos][takeColPosRight]  == 'K')    ) {
 						return true;
 				}
 		    }//if value == "P"
